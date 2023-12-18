@@ -1,7 +1,7 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import puppeteer from "puppeteer";
 import {} from "dotenv/config";
 import { DB } from "./utils/firebase.js";
-import { launchPuppeteer } from "./utils/puppeteer.js";
 
 const delay = (n) => new Promise((r) => setTimeout(r, n * 1000));
 
@@ -113,7 +113,10 @@ async function getAccessToken() {
   }
   async function verifyDevice(uri, userCode, username, password) {
     return new Promise(async (resolve, reject) => {
-      const page = await launchPuppeteer();
+      const browser = await puppeteer.launch({
+        headless: "new",
+      });
+      const page = await browser.newPage();
       await page.goto(uri);
       await page.keyboard.press("Tab");
       await delay(5);
